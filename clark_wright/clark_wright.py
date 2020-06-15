@@ -10,6 +10,7 @@ import numpy as np
 # Helpers
 
 def make_DI(dist, n_close):
+    """ make neighbor shortlists """
     mask = 100 * dist.max() * np.eye(dist.shape[0])
     tmp  = dist + mask
     
@@ -18,6 +19,7 @@ def make_DI(dist, n_close):
     return D, I
 
 def DI_to_edges(D, I, D_depot):
+    """ convert neighbor shortlists to edges for CW """
     n_customers = D.shape[0]
     n_neighbors = D.shape[1]
     
@@ -203,7 +205,16 @@ class __CW:
 # High-level interface
 
 def clark_wright(dist, demand, cap, depot_id, n_close):
-    
+    """
+        Run Clark-Wright savings algorithm
+        
+        dist     : distance matrix
+        demand   : demand vector
+        cap      : maximum vehicle capacity
+        depot_id : depot_id
+        n_close  : number of neighbors for CW shortlists
+        
+    """
     idxs     = np.arange(dist.shape[0])
     node_sel = np.setdiff1d(idxs, depot_id)
     
