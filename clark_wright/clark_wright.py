@@ -9,10 +9,12 @@ import numpy as np
 # --
 # Helpers
 
-def make_DI(dist, depot_id, n_close):
-    tmp = dist + np.eye(100 * dist.max())
-    D   = -1 * np.sort(-1 * tmp, axis=-1, kind='stable')[:,::-1][:,:n_close]
-    I   = np.argsort(-1 * tmp, axis=-1, kind='stable')[:,::-1][:,:n_close]
+def make_DI(dist, n_close):
+    mask = 100 * dist.max() * np.eye(dist.shape[0])
+    tmp  = dist + mask
+    
+    D = -1 * np.sort(-1 * tmp, axis=-1, kind='stable')[:,::-1][:,:n_close]
+    I = np.argsort(-1 * tmp, axis=-1, kind='stable')[:,::-1][:,:n_close]
     return D, I
 
 def DI_to_edges(D, I, D_depot):
@@ -200,7 +202,7 @@ class __CW:
 # --
 # High-level interface
 
-def clark_wright(dist, demand, cap, depot_id=0):
+def clark_wright(dist, demand, cap, depot_id, n_close):
     
     idxs     = np.arange(dist.shape[0])
     node_sel = np.setdiff1d(idxs, depot_id)
@@ -210,6 +212,6 @@ def clark_wright(dist, demand, cap, depot_id=0):
     
     # shortlisted distance from node to nodes
     dist_nodes = dist[node_sel][:,node_sel]
-    dist_neib, idx_neib = make_DI(dist_nodes)
+    dist_neib, idx_neib = make_DI(dist_nodes, n_close)
     
     return __CW(dist_neib, idx_neib, dist_depot, demand, cap).run()
