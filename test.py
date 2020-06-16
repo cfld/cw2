@@ -38,7 +38,7 @@ def load_problem(inpath, perturb=False):
 # IO
 
 n_close = 100
-perturb = True
+perturb = False
 inpath  = '/Users/bjohnson/projects/fyre/VRPXXL/Leuven1.txt'
 
 cap, n_customers, depot_id, xy, demand = load_problem(inpath, perturb=perturb)

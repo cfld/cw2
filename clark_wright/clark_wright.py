@@ -198,7 +198,7 @@ class __CW:
         
         self._fix_unvisited()
         
-        routes = [r['nodes'] for r in self.routes.values()]
+        routes = [np.array(r['nodes']) for r in self.routes.values()]
         return routes
 
 # --
@@ -225,4 +225,13 @@ def clark_wright(dist, demand, cap, depot_id, n_close):
     dist_nodes = dist[node_sel][:,node_sel]
     dist_neib, idx_neib = make_DI(dist_nodes, n_close)
     
-    return __CW(dist_neib, idx_neib, dist_depot, demand, cap).run()
+    assert demand[depot_id] == 0
+    node_demand = demand[node_sel]
+    
+    routes = __CW(dist_neib, idx_neib, dist_depot, node_demand, cap).run()
+    
+    # check constraints
+    for route in routes:
+        assert node_demand[route].sum() <= cap, 'violate load constraint'
+    
+    return routes
