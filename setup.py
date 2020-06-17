@@ -1,6 +1,6 @@
 #!/usr/bin/env/python
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='clark_wright',
@@ -10,5 +10,6 @@ setup(
     description='clark_wright',
     keywords=['clark_wright'],
     license='ALV2',
-    version="0.0.0"
+    version="0.0.0",
+    packages=find_packages(),
 )
